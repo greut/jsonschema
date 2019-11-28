@@ -1,0 +1,45 @@
+project_name: jsonschema
+
+before:
+  hooks:
+  - go mod tidy
+builds:
+- id: jv
+  binary: jv
+  main: ./cmd/jv/main.go
+  goos:
+  - linux
+  - darwin
+  goarch:
+  - amd64
+  env:
+  - CGO_ENABLED=0
+archives:
+- replacements:
+    386: i386
+    amd64: x86_64
+dockers:
+- image_templates:
+  - greut/jsonschema:latest
+  - greut/jsonschema:{{ .Tag }}
+  - greut/jsonschema:v{{ .Major }}
+  goos: linux
+  goarch: amd64
+  binaries:
+  - jsonschema
+checksum:
+  name_template: 'checksums.txt'
+signs:
+- artifacts: checksum
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
+release:
+  github:
+    owner: greut
+    name: jsonschema
