@@ -1,4 +1,4 @@
-FROM linuxkit/ca-certificates:v0.7
+FROM alpine:3
 
 COPY jv /usr/local/bin/
 
